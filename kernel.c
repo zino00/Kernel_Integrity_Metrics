@@ -97,7 +97,7 @@ int test_netlink_init(void)
 {   
     printk("test_netlink_start......\n");
     /* create netlink socket */
-    nlsk = netlink_kernel_create(NETLINK_CONNECTOR, NETLINK_TEST, cn_input,THIS_MODULE);
+    nlsk = netlink_kernel_create(NETLINK_TEST, 4 + 0xf, cn_input,THIS_MODULE);
     if(nlsk == NULL)
     {
         printk("netlink_kernel_create error !\n");
