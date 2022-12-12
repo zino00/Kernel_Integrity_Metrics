@@ -1,6 +1,6 @@
-obj-m += kernel.o
-
-KDIR =/home/zino/kernel/linux-2.6.18/
+obj-m += netlink.o
+# obj-m += getsys.o
+KDIR =/home/zino/kernel/linux-5.4.98/
 
 all:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
