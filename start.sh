@@ -4,8 +4,8 @@ make clean
 make
 gcc user.c -o user -static
 cp netlink.ko ~/kernel/busybox-1.35.0/_install
+cp change_scb.ko ~/kernel/busybox-1.35.0/_install
 cp user ~/kernel/busybox-1.35.0/_install
-# cp getsys.ko ~/kernel/busybox-1.35.0/_install
 popd
 pushd  ~/kernel/busybox-1.35.0/_install
 find . | cpio -o --format=newc > ../rootfs.img

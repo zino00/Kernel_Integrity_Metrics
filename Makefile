@@ -1,4 +1,4 @@
-obj-m += netlink.o
+obj-m += change_scb.o netlink.o
 # obj-m += getsys.o
 KDIR =/home/zino/kernel/linux-5.4.98/
 

@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     socklen_t len;
     struct nlmsghdr *nlh = NULL;
     struct sockaddr_nl saddr, daddr;
-    char *umsg = "The kernel integrity metrics module starts working";
+    char *umsg = "The kernel integrity metrics module starts working\n";
 
     /* 创建NETLINK socket */
     skfd = socket(AF_NETLINK, SOCK_RAW, NETLINK_TEST);
@@ -80,22 +80,17 @@ int main(int argc, char **argv)
         close(skfd);
         exit(-1);
     }
-    char *true_result=u_info.msg;
-    printf("[INFO] %s\n", u_info.msg);
+    char true_result[32];
+    strcpy(true_result,u_info.msg);
+    printf("[INFO] Initial hash of the syscall table: %s\n", u_info.msg);
     
     int check_cnt=0;
     while(1){
         check_cnt++;
-        sleep(3);
-        // printf("1");
+        sleep(10);
         time_t tmpcal_ptr;
 	    time(&tmpcal_ptr);
 	    printf("[TIME:%d] ", tmpcal_ptr);
-        // itoa(check_cnt,umsg,10);
-        // umsg=(char)check_cnt;
-        // char buffer[50];
-        // sprintf(buffer,"%d",check_cnt);
-        // umsg=buffer;
         memcpy(NLMSG_DATA(nlh), umsg, strlen(umsg));
         ret = sendto(skfd, nlh, nlh->nlmsg_len, 0, (struct sockaddr *)&daddr, sizeof(struct sockaddr_nl));
         if(!ret)
@@ -104,8 +99,6 @@ int main(int argc, char **argv)
             close(skfd);
             exit(-1);
         }
-        printf("%sth Check: ", umsg);
-
         memset(&u_info, 0, sizeof(u_info));
         len = sizeof(struct sockaddr_nl);
         ret = recvfrom(skfd, &u_info, sizeof(user_msg_info), 0, (struct sockaddr *)&daddr, &len);
@@ -115,8 +108,7 @@ int main(int argc, char **argv)
             close(skfd);
             exit(-1);
         }
-        char *result=u_info.msg;
-        if(result==true_result){
+        if(!strcmp(u_info.msg,true_result)){
             printf("The syscall table has not changed,the kernel is safe.\n");
         }
         else {
