@@ -1,17 +1,26 @@
 #! bash
-pushd ~/kernel/Kernel_Integrity_Metrics
-make clean
+pushd ~/kernel/Kernel_Integrity_Metrics/system_call_table
+
+#compile kernel module
 make
-gcc user.c -o user -static
+
+#compile netlink user program
+gcc user.c -o ~/kernel/busybox-1.35.0/_install/user -static
+
+#cp kernel module to kernel file system
 cp netlink.ko ~/kernel/busybox-1.35.0/_install
 cp change_scb.ko ~/kernel/busybox-1.35.0/_install
-cp user ~/kernel/busybox-1.35.0/_install
+
+#clean work dir
+make clean
+
+
 popd
 pushd  ~/kernel/busybox-1.35.0/_install
 find . | cpio -o --format=newc > ../rootfs.img
 popd
 
-sleep 3
+#starting kernel
 qemu-system-x86_64 \
     -nographic \
     -kernel ~/kernel/linux-5.4.98/arch/x86/boot/bzImage \
@@ -19,5 +28,5 @@ qemu-system-x86_64 \
     -append "root=/dev/ram console=ttyS0 oops=panic panic=1 nokaslr" \
     -smp cores=2,threads=1 \
     -cpu kvm64 \
-    -no-reboot
+    -no-reboot \
     -gdb tcp::1234
