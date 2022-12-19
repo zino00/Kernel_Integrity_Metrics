@@ -47,7 +47,7 @@ static void change_code(void)
     disable_write_protection();
 	ptr[1] = 0xff;
     enable_write_protection();
-	printk("%s: Finish\n", __func__);
+	printk("Hello rookie, your kernel's code has been changed!\n");
 	return;
 }
 static int ko_test_init(void)
